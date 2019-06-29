@@ -4,10 +4,13 @@ import models.Message;
 
 public class MessageTextView {
 
-    public MessageTextView(Message msgToDisplay) {
+    private Message msgToDisplay;
 
+    public MessageTextView(Message msgToDisplay) {
+        this.msgToDisplay = msgToDisplay;
     }
     @Override public String toString() {
-        return null;
+        return "From: " + msgToDisplay.getFromid() + "\nTo:    " + msgToDisplay.getToid() + "\n\"" +
+                msgToDisplay.getMessage() + "\"\n";
     } 
 }

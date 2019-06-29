@@ -10,7 +10,7 @@ import java.util.List;
 import controllers.IdController;
 import controllers.MessageController;
 
-// Simple Shell is a Console view for YouAreEll.
+// Simple Shell is a Console view for views.YouAreEll.
 public class SimpleShell {
 
 
@@ -67,8 +67,14 @@ public class SimpleShell {
 
                 // ids
                 if (list.contains("ids")) {
-                    String results = webber.get_ids();
-                    SimpleShell.prettyPrint(results);
+                    if(list.size()==3){
+                       String results = webber.post_ids(list.get(1), list.get(2));
+                       SimpleShell.prettyPrint(results);
+                    }
+                    else {
+                        String results = webber.get_ids();
+                        SimpleShell.prettyPrint(results);
+                    }
                     continue;
                 }
 
