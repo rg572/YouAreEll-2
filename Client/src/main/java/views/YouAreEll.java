@@ -42,11 +42,24 @@ public class YouAreEll {
     public String post_ids(String name, String github){
         Id newID = idCtrl.postId(new Id(name, github));
         if(newID!= null){
-            return "Your new id is:\n" + new IdTextView(newID).toString();
+            return "\nYour new id is:\n" + new IdTextView(newID).toString();
         }
         else{
-            return "ID posting failed";
+            return "\nID posting failed";
         }
+    }
+
+    public String put_ids(String name){
+        Id idUpdate = idCtrl.getMyId();
+        idUpdate.setName(name);
+        Id updatedID = idCtrl.putId(idUpdate);
+        if(updatedID!= null){
+            return "\nYour updated id is:\n" + new IdTextView(updatedID).toString();
+        }
+        else{
+            return "\nID update failed";
+        }
+
     }
 
     public String get_messages() {
@@ -57,6 +70,12 @@ public class YouAreEll {
             sbuild.append(new MessageTextView(message).toString()).append("\n");
         }
         return sbuild.toString();
+    }
+
+    public String post_message(String message, String toid){
+        Message msg = new Message(message, idCtrl.getGithub(), toid);
+        String postResult = msgCtrl.postMessage(idCtrl.getGithub(), toid, msg);
+        return postResult;
     }
 
     public String MakeURLCall(String mainurl, String method, String jpayload) {

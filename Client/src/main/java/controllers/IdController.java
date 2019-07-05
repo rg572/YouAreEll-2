@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import models.Id;
 
 public class IdController {
-    Id myId = new Id("Marcus P. Cato", "Cato");
+    Id myId = new Id("Marcus P. Cato", "CatoMajor","d2ba40338b38d576d5706fb415c43c71ff4da28a");
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -49,7 +49,32 @@ public class IdController {
     }
 
     public Id putId(Id id) {
-        return null;
+        String jsonpayload;
+        try{
+            jsonpayload = mapper.writeValueAsString(id);
+        } catch(JsonProcessingException e){
+            e.printStackTrace();
+            return null;
+        }
+
+        String jsonString = TransactionController.getInstance().putStuff("/ids",jsonpayload);
+        System.out.println("JSONSTRING " + jsonString);
+        try{
+            Id updatedId = mapper.readValue(jsonString, Id.class);
+            this.myId = updatedId;
+            return updatedId;
+        } catch(IOException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getGithub(){
+        return myId.getGithub();
+    }
+
+    public Id getMyId(){
+        return myId;
     }
 
     public static void main(String[] args) {

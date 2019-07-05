@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mashape.unirest.http.Unirest;
 import controllers.IdController;
 import controllers.MessageController;
 
@@ -43,6 +44,7 @@ public class SimpleShell {
             if (commandLine.equals(""))
                 continue;
             if (commandLine.equals("exit")) {
+                Unirest.shutdown();
                 System.out.println("bye!");
                 break;
             }
@@ -67,9 +69,23 @@ public class SimpleShell {
 
                 // ids
                 if (list.contains("ids")) {
-                    if(list.size()==3){
-                       String results = webber.post_ids(list.get(1), list.get(2));
-                       SimpleShell.prettyPrint(results);
+                    if(list.size()>=4 && list.get(1).equals("new")){
+                        StringBuilder sbuild = new StringBuilder();
+                        for(int i = 2; i < list.size() -2; i++){
+                            sbuild.append(list.get(i)).append(" ");
+                        }
+                        sbuild.append(list.get(list.size()-2));
+                        String results = webber.post_ids(sbuild.toString(), list.get(list.size()-1));
+                        SimpleShell.prettyPrint(results);
+                    }
+                    else if(list.size() > 1){
+                        StringBuilder sbuild = new StringBuilder();
+                        for(int i =1; i < list.size() -1; i++){
+                            sbuild.append(list.get(i)).append(" ");
+                        }
+                        sbuild.append(list.get(list.size()-1));
+                        String results = webber.put_ids(sbuild.toString());
+                        SimpleShell.prettyPrint(results);
                     }
                     else {
                         String results = webber.get_ids();
@@ -85,6 +101,29 @@ public class SimpleShell {
                     continue;
                 }
                 // you need to add a bunch more.
+
+                if(list.size() >= 2 && list.get(0).equals("post")){
+                    if(list.size() >= 4 && list.get(1).equals("to")){
+                        StringBuilder sbuild = new StringBuilder();
+                            for(int i =2; i < list.size() -1; i++){
+                                sbuild.append(list.get(i)).append(" ");
+                            }
+                            sbuild.append(list.get(list.size() - 1));
+                            String result = webber.post_message(sbuild.toString(), list.get(1));
+                            SimpleShell.prettyPrint(result);
+                    }
+                    else{
+                        StringBuilder sbuild = new StringBuilder();
+                        for(int i = 1; i < list.size()-1; i++){
+                            sbuild.append(list.get(i)).append(" ");
+                        }
+                        sbuild.append(list.get(list.size()-1));
+                        String result = webber.post_message(sbuild.toString(), "");
+                        SimpleShell.prettyPrint(result);
+                    }
+                    continue;
+
+                }
 
                 //!! command returns the last command in history
                 if (list.get(list.size() - 1).equals("!!")) {
